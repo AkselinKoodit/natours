@@ -1,0 +1,65 @@
+C:\Users\Akseli>mongo
+MongoDB shell version v4.4.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("203c39c8-5159-42b6-8283-bca5d69bd5d2") }
+MongoDB server version: 4.4.6
+
+> use  natours-test
+switched to db natours-test
+> db.tours.insertMany([{name: "The Sea Explorer", price: 497, rating: 4.8}, {name: "The Snow Adventurer", price: 997, rating: 4.9, difficulty: "easy"}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("60ea98f8f06b719a2742b919"),
+                ObjectId("60ea98f8f06b719a2742b91a")
+        ]
+}
+> db.tours.find()
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b91a"), "name" : "The Snow Adventurer", "price" : 997, "rating" : 4.9, "difficulty" : "easy" }
+
+> db.tours.find({name: "The Forest Hiker"})
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+
+> db.tours.find({price: {$lte: 500}})
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+
+> db.tours.find({price: {$lte: 500}, rating: {$gte: 4.8}})
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+
+> db.tours.find({$or: [{price: {$lt:500}},{rating: {qte: 4.8}}]})
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+
+> db.tours.find({$or: [{price: {$lt:400}},{rating: {gt: 4.8}}]})
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+
+> db.tours.find({ $or: [ {price: {$lt: 500}}, {rating: {$gte: 4.8}} ] })
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b91a"), "name" : "The Snow Adventurer", "price" : 997, "rating" : 4.9, "difficulty" : "easy" }
+
+> db.tours.find({$or:[{price:{$lt:400}},{rating:{$gt:4.8}}]})
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b91a"), "name" : "The Snow Adventurer", "price" : 997, "rating" : 4.9, "difficulty" : "easy" }
+
+> db.tours.updateOne({name:"The Snow Adventurer"}, {$set: {price: 597}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.tours.find()
+{ "_id" : ObjectId("60ea961ffa0382360a4c8318"), "name" : "The Forest Hiker", "price" : 297, "rating" : 4.7 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b919"), "name" : "The Sea Explorer", "price" : 497, "rating" : 4.8 }
+{ "_id" : ObjectId("60ea98f8f06b719a2742b91a"), "name" : "The Snow Adventurer", "price" : 597, "rating" : 4.9, "difficulty" : "easy" }
+
+> db.tours.find({price: {$gte:500}, rating: {$gte:4.8}})
+{ "_id" : ObjectId("60ea98f8f06b719a2742b91a"), "name" : "The Snow Adventurer", "price" : 597, "rating" : 4.9, "difficulty" : "easy" }
+
+> db.tours.updateMany({price: {$gt: 500}, rating: {$gte:4.8}}, {$set: {premium: true}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+//db.tours.replaceOne or replaceMany
+
+> db.tours.deleteMany({rating: {$lt: 4.8}})
+{ "acknowledged" : true, "deletedCount" : 1 }
+
