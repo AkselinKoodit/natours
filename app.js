@@ -10,9 +10,12 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingController = require('./routes/bookingController');
 const viewRouter = require('./routes/viewRoutes');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
+
 const app = express();
 
 // Aquiring security & sanitization tools:
@@ -26,7 +29,10 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) Global Middlewares
+//implement CORS
+app.use(cors());
 
+app.options('*', cors());
 // Serving static files
 // app.use(express.static(`${__dirname}/public`));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -69,6 +75,12 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again in an hour.',
 });
 app.use('/api', limiter);
+
+app.post(
+    '/webhook-checkout',
+    express.raw({ type: 'application/json' }),
+    bookingController.webhookCheckout
+);
 
 //console.log(process.env.NODE_ENV);
 // console.log(app.get('env'));
