@@ -42,7 +42,7 @@ if (signUpForm) {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const passwordConfirm =
-            document.getElementById('passwordConfirm').value;
+            document.getElementById('password-confirm').value;
         signup(name, email, password, passwordConfirm);
     });
 }
