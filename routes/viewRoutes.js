@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const viewController = require('../controllers/viewController');
 const bookingController = require('../controllers/bookingController');
 
+router.use(viewController.alerts);
 router.get('/signup', viewController.getSignupForm);
 
 router.get(
