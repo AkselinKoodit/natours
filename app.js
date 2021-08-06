@@ -12,6 +12,7 @@ const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const app = express();
 
 // Aquiring security & sanitization tools:
@@ -101,6 +102,8 @@ app.use(
         ],
     })
 );
+
+app.use(compression());
 
 //Testing middlewares
 app.use((req, res, next) => {
